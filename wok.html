@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Edukasi & Simulasi Kesiapsiagaan Bencana</title>
+    <style>
+        :root {
+            --primary: #d97706;
+            --primary-hover: #b45309;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1, h2, h3 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
+        h1 { text-align: center; font-size: 2rem; }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* BAGIAN 1: MATERI EDUKASI */
+        .module-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .pilar-box {
+            background: #334155;
+            padding: 15px;
+            border-radius: 8px;
+            border-top: 3px solid var(--accent-blue);
+        }
+
+        /* BAGIAN 2: SIMULASI GAME */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar-outer {
+            width: 100px;
+            height: 12px;
+            background: #475569;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .bar-inner {
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .scenario-box {
+            background: #334155;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .avatar-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            font-size: 3rem;
+            background: #1e293b;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: #475569;
+            color: white;
+            border: 2px solid transparent;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #64748b;
+            border-color: #fbbf24;
+        }
+
+        /* MODAL REAKSI */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+
+        .meme-emoji {
+            font-size: 4rem;
+            margin: 15px 0;
+        }
+
+        /* EVALUASI */
+        .eval-box {
+            text-align: center;
+            padding: 20px;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- BAGIAN 1: MATERI KULIAH -->
+    <div id="education-page">
+        <h1>🎓 Modul Edukasi: Kesiapsiagaan Bencana</h1>
+        <p style="text-align: center; margin-bottom: 25px; color: #cbd5e1;">
+            Pelajari landasan teori & regulasi sebelum memulai simulasi keputusan Kepala BPBD!
+        </p>
+
+        <div class="module-card">
+            <h3>1. Fokus Utama Kesiapsiagaan Bencana</h3>
+            <p>Upaya untuk mengantisipasi bencana melalui pengorganisasian serta langkah yang tepat guna dan berdaya guna.</p>
+            <ul>
+                <li><strong>Pemetaan Risiko:</strong> Menentukan wilayah rentan bahaya.</li>
+                <li><strong>Rencana Kontingensi:</strong> Skenario penanganan darurat yang disepakati bersama.</li>
+                <li><strong>Latihan & Simulasi:</strong> Uji coba rutin kapasitas warga dan petugas.</li>
+                <li><strong>Jalur Evakuasi:</strong> Penentuan rute dan tempat evakuasi sementara yang aman.</li>
+                <li><strong>Sistem Peringatan Dini (EWS):</strong> Jaringan penyampaian tanda bahaya.</li>
+            </ul>
+        </div>
+
+        <div class="module-card">
+            <h3>2. Regulasi & Pembagian Aktor (UU No. 24 Tahun 2007)</h3>
+            <div class="grid-2">
+                <div>
+                    <ul>
+                        <li><strong>Pasal 5 (Pemerintah Pusat & Daerah):</strong> Penyelenggara utama penanggulangan bencana.</li>
+                        <li><strong>Pasal 10 & 11 (BNPB):</strong> Lembaga non-departemen setingkat Menteri penanggung jawab nasional.</li>
+                        <li><strong>Pasal 18 (BPBD):</strong> Badan daerah yang mengeksekusi penanganan di tingkat Provinsi/Kab/Kota.</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li><strong>Pasal 27 (Masyarakat):</strong> Berhak mendapat perlindungan & wajib melakukan kegiatan penanggulangan.</li>
+                        <li><strong>Pasal 28 (Lembaga Usaha):</strong> Berperan dalam kemitraan & Tanggung Jawab Sosial (CSR).</li>
+                        <li><strong>Pasal 30 (Lembaga Internasional):</strong> Dukungan sesuai ketentuan regulasi.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-card">
+            <h3>3. Empat Pilar EWS (UNDRR, 2023)</h3>
+            <div class="grid-2">
+                <div class="pilar-box">
+                    <strong>1. Disaster Risk Knowledge</strong>
+                    <p style="font-size: 0.85rem;">Memahami ancaman, kerentanan, dan risiko wilayah secara terstruktur.</p>
+                </div>
+                <div class="pilar-box">
+                    <strong>2. Detection, Monitoring & Forecasting</strong>
+                    <p style="font-size: 0.85rem;">Penggunaan sensor, radar, dan analisis data ilmiah real-time.</p>
+                </div>
+                <div class="pilar-box">
+                    <strong>3. Warning Dissemination</strong>
+                    <p style="font-size: 0.85rem;">Penyebaran pesan cepat, jelas, dan inklusif (SMS, sirene, radio, sosial media).</p>
+                </div>
+                <div class="pilar-box">
+                    <strong>4. Response Capability</strong>
+                    <p style="font-size: 0.85rem;">Kesiapan warga dan tim respons untuk evakuasi saat peringatan berbunyi.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-card">
+            <h3>4. Tantangan Nyata di Lapangan</h3>
+            <ul>
+                <li><strong>Peringatan Terlambat / Pesan Terlalu Teknis:</strong> Informasi ilmiah tidak diterjemahkan ke bahasa awam.</li>
+                <li><strong>Disinformasi & Hoaks:</strong> Isu simpang siur memicu panik atau pengabaian.</li>
+                <li><strong>Infrastruktur Lumpuh:</strong> Pemadaman listrik atau jaringan seluler terputus saat krisis.</li>
+                <li><strong>Kelompok Rentan Tak Terjangkau:</strong> Lansia, difabel, dan anak-anak sering luput dari jalur respons cepat.</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 25px;">
+            <button class="btn" onclick="startGame()">Mulai Simulasi Game 🚀</button>
+        </div>
+    </div>
+
+    <!-- BAGIAN 2: SIMULASI GAME -->
+    <div id="game-page" class="hidden">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span>❤️ Keselamatan Warga:</span>
+                <div class="bar-outer">
+                    <div id="safety-bar" class="bar-inner" style="background: var(--accent-green); width: 100%;"></div>
+                </div>
+                <span id="safety-val">100%</span>
+            </div>
+            <div class="stat-item">
+                <span>⭐ Kepercayaan Publik:</span>
+                <div class="bar-outer">
+                    <div id="trust-bar" class="bar-inner" style="background: var(--accent-blue); width: 100%;"></div>
+                </div>
+                <span id="trust-val">100%</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <div class="avatar-box">
+                <div class="avatar" id="scenario-icon">🚨</div>
+                <div>
+                    <h3 id="scenario-title">Babak 1</h3>
+                    <p id="scenario-subtitle" style="font-size: 0.85rem; color: #94a3b8;">Kabupaten Kota Sentosa</p>
+                </div>
+            </div>
+            <p id="scenario-desc" style="font-size: 1.05rem; margin-bottom: 10px;"></p>
+            <blockquote id="scenario-quote" style="font-style: italic; color: #fbbf24; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; margin-bottom: 15px;"></blockquote>
+            
+            <div class="options-list" id="options-container"></div>
+        </div>
+    </div>
+
+    <!-- MODAL REAKSI -->
+    <div id="reaction-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Reaksi Keputusan</h2>
+            <div class="meme-emoji" id="modal-emoji">😱</div>
+            <p id="modal-text" style="margin-bottom: 15px;"></p>
+            <div id="modal-impact" style="font-weight: bold; margin-bottom: 20px;"></div>
+            <button class="btn" onclick="nextStage()">Lanjut ke Babak Berikutnya ➔</button>
+        </div>
+    </div>
+
+    <!-- BAGIAN 3: EVALUASI AKHIR -->
+    <div id="eval-page" class="hidden">
+        <div class="eval-box">
+            <h1>📋 Laporan Evaluasi Kinerja Kepala BPBD</h1>
+            <div class="meme-emoji" id="eval-emoji">🏆</div>
+            <h2 id="eval-status">Sangat Baik!</h2>
+            <p id="eval-summary" style="margin: 20px 0; font-size: 1.1rem;"></p>
+            
+            <div class="module-card" style="text-align: left;">
+                <h3>Poin Pembelajaran Tata Kelola Bencana:</h3>
+                <ul id="eval-lessons"></ul>
+            </div>
+
+            <button class="btn" onclick="restartGame()">Ulangi Simulasi 🔄</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // DATA GAME & SKENARIO
+    let state = {
+        safety: 100,
+        trust: 100,
+        currentStage: 0
+    };
+
+    const scenarios = [
+        {
+            title: "Babak 1: Tanda-Tanda Alam & Sensor Air",
+            desc: "Hujan deras mengguyur hulu sungai selama 6 jam tanpa henti. Sensor ketinggian air (EWS Pilar 2) menunjukkan status Siaga 2. Namun, sebagian warga bantaran sungai sibuk memperdebatkan info di grup WA keluarga yang mengklaim air sungai meluap cuma karena 'kiriman pawang hujan yang gagal'.",
+            quote: "\"Pak Kepala BPBD! Warga di RT 03 menolak bersiap karena kata Pak RT hujan bakal reda kalau kita jemur sapu lidi balik!\"",
+            options: [
+                {
+                    text: "A. Buat konten TikTok edukasi lucu sambil joget-joget di tepi sungai agar warga notice.",
+                    correct: false,
+                    safetyPenalty: 15,
+                    trustPenalty: 10,
+                    emoji: "🕺",
+                    feedback: "Konyol! Videomu emang FYP, tapi warga malah asyik nonton video TikTok-mu daripada mengemas barang berharga. Air sungai makin tinggi!"
+                },
+                {
+                    text: "B. Verifikasi data sensor (Pilar 2), lalu aktifkan penyebaran informasi cepat (Pilar 3) via sirine dan pesan singkat resmi yang mudah dipahami.",
+                    correct: true,
+                    safetyPenalty: 0,
+                    trustPenalty: 0,
+                    emoji: "📢",
+                    feedback: "Keputusan Tepat! Peringatan resmi terverifikasi mengalahkan hoaks grup WA. Warga mulai siaga mengamankan dokumen penting."
+                },
+                {
+                    text: "C. Rilis dokumen PDF 50 halaman berisi kalkulasi debit hidrologi dan koordinat GPS sensor ke grup warga.",
+                    correct: false,
+                    safetyPenalty: 10,
+                    trustPenalty: 20,
+                    emoji: "🤓",
+                    feedback: "Hambatan Informasi! Pesan terlalu teknis membuat warga pusing dan emosi. Mereka malah mengabaikan pesanmu dan lanjut mengeringkan jemuran."
+                }
+            ]
+        },
+        {
+            title: "Babak 2: Penyebaran Informasi & Isu Hoaks",
+            desc: "Tiba-tiba listrik mati total akibat pohon tumbang! Jaringan seluler melambat. Tiba-tiba beredar hoaks bahwa tanggul utama jebol total padahal hanya luapan kecil. Warga panik saling berebut jalan.",
+            quote: "\"Tolong Pak! Bu Tejo panik lari pakai daster sambil gotong TV 43 inch karena dengar kabar hoaks tanggul jebol!\"",
+            options: [
+                {
+                    text: "A. Gunakan Pengeras Suara / Megapon Keliling & Radio Komunitas (Pilar 3) untuk klarifikasi hoaks dan beri instruksi arah evakuasi.",
+                    correct: true,
+                    safetyPenalty: 0,
+                    trustPenalty: 0,
+                    emoji: "📻",
+                    feedback: "Mantap! Komunikasi alternatif tanpa jaringan listrik berhasil menenangkan warga. Bu Tejo akhirnya menaruh TV-nya dan evakuasi dengan tenang."
+                },
+                {
+                    text: "B. Balas pesan hoaks di grup WA dengan kata-kata kasar dan mengancam memblokir nomor warga yang panik.",
+                    correct: false,
+                    safetyPenalty: 20,
+                    trustPenalty: 30,
+                    emoji: "🤬",
+                    feedback: "Kacau! Kepercayaan publik anjlok drastis. Warga menganggap BPBD tidak bersahabat dan memilih percaya rumor liar."
+                },
+                {
+                    text: "C. Bikin konferensi pers formal di hotel bintang lima yang berjarak 30 km dari lokasi bencana.",
+                    correct: false,
+                    safetyPenalty: 25,
+                    trustPenalty: 15,
+                    emoji: "🏨",
+                    feedback: "Salah Fokus! Saat kamu sibuk makan prasmanan konferensi pers, warga di lapangan bingung tanpa panduan evakuasi."
+                }
+            ]
+        },
+        {
+            title: "Babak 3: Evakuasi & Kelompok Rentan",
+            desc: "Air mulai meluap ke pemukiman setinggi lutut dewasa. Tim SAR dan relawan siap bergerak. Di Posko Evakuasi, ditemukan beberapa lansia dan penyandang disabilitas masih terjebak di dalam rumah karena rute evakuasi terhalang parkir liar dan pos ronda.",
+            quote: "\"Mbah Minto tidak mau dievakuasi kalau kambing kesayangannya tidak ikut dibawa naik perahu karet!\"",
+            options: [
+                {
+                    text: "A. Mengarahkan Tim Reaksi Cepat bersama relawan (Pilar 4) mengeksekusi rencana kontingensi evakuasi inklusif bagi kelompok rentan.",
+                    correct: true,
+                    safetyPenalty: 0,
+                    trustPenalty: 0,
+                    emoji: "🛟",
+                    feedback: "Luar Biasa! Tim berhasil mengevakuasi lansia dan kelompok rentan dengan aman (dan ya, kambing Mbah Minto juga ikut diselamatkan)."
+                },
+                {
+                    text: "B. Suruh warga yang masih muda untuk saling gendong saja tanpa panduan jalur evakuasi resmi.",
+                    correct: false,
+                    safetyPenalty: 20,
+                    trustPenalty: 10,
+                    emoji: "🤦‍♂️",
+                    feedback: "Berbahaya! Tanpa pemetaan jalur evakuasi yang jelas (Pilar 1), warga malah terjebak di gang buntu yang terendam air."
+                },
+                {
+                    text: "C. Tunggu instruksi tertulis berbintik emas dari Pusat sebelum mengerahkan perahu karet.",
+                    correct: false,
+                    safetyPenalty: 30,
+                    trustPenalty: 20,
+                    emoji: "⏳",
+                    feedback: "Birokrasi Lambat! Dalam kondisi darurat, penundaan keputusan merusak respons (Pilar 4) dan membahayakan keselamatan jiwa!"
+                }
+            ]
+        }
+    ];
+
+    function startGame() {
+        document.getElementById('education-page').classList.add('hidden');
+        document.getElementById('game-page').classList.remove('hidden');
+        state.safety = 100;
+        state.trust = 100;
+        state.currentStage = 0;
+        updateUI();
+        loadStage();
+    }
+
+    function loadStage() {
+        const stage = scenarios[state.currentStage];
+        document.getElementById('scenario-title').innerText = stage.title;
+        document.getElementById('scenario-desc').innerText = stage.desc;
+        document.getElementById('scenario-quote').innerText = stage.quote;
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        stage.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => selectOption(opt);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(option) {
+        state.safety = Math.max(0, state.safety - option.safetyPenalty);
+        state.trust = Math.max(0, state.trust - option.trustPenalty);
+        updateUI();
+
+        document.getElementById('modal-title').innerText = option.correct ? "Tindakan Tepat! 🎉" : "Keputusan Keliru! ⚠️";
+        document.getElementById('modal-emoji').innerText = option.emoji;
+        document.getElementById('modal-text').innerText = option.feedback;
+        document.getElementById('modal-impact').innerText = `Dampak: Keselamatan -${option.safetyPenalty}% | Kepercayaan -${option.trustPenalty}%`;
+
+        document.getElementById('reaction-modal').classList.remove('hidden');
+    }
+
+    function nextStage() {
+        document.getElementById('reaction-modal').classList.add('hidden');
+        state.currentStage++;
+
+        if (state.currentStage < scenarios.length) {
+            loadStage();
+        } else {
+            showEvaluation();
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('safety-bar').style.width = state.safety + '%';
+        document.getElementById('safety-val').innerText = state.safety + '%';
+        document.getElementById('trust-bar').style.width = state.trust + '%';
+        document.getElementById('trust-val').innerText = state.trust + '%';
+    }
+
+    function showEvaluation() {
+        document.getElementById('game-page').classList.add('hidden');
+        document.getElementById('eval-page').classList.remove('hidden');
+
+        const evalEmoji = document.getElementById('eval-emoji');
+        const evalStatus = document.getElementById('eval-status');
+        const evalSummary = document.getElementById('eval-summary');
+        const evalLessons = document.getElementById('eval-lessons');
+
+        let avgScore = (state.safety + state.trust) / 2;
+
+        if (avgScore >= 85) {
+            evalEmoji.innerText = "🏅";
+            evalStatus.innerText = "Kepala BPBD Teladan!";
+            evalSummary.innerText = `Skor Keselamatan: ${state.safety}% | Skor Kepercayaan: ${state.trust}%. Kota Sentosa berhasil melewati krisis dengan korban minimal dan penanganan EWS yang efisien!`;
+        } else if (avgScore >= 50) {
+            evalEmoji.innerText = "😅";
+            evalStatus.innerText = "Penanganan Cukup (Banyak Catatan)";
+            evalSummary.innerText = `Skor Keselamatan: ${state.safety}% | Skor Kepercayaan: ${state.trust}%. Bencana berhasil teratasi tetapi diwarnai kepanikan, hoaks, dan hambatan komunikasi di lapangan.`;
+        } else {
+            evalEmoji.innerText = "💥";
+            evalStatus.innerText = "Kota Kacau Balau!";
+            evalSummary.innerText = `Skor Keselamatan: ${state.safety}% | Skor Kepercayaan: ${state.trust}%. Kota mengalami kerugian besar karena kegagalan koordinasi, pesan teknis yang membingungkan, dan hoaks yang merajalela.`;
+        }
+
+        evalLessons.innerHTML = `
+            <li><strong>Pentingnya EWS Terintegrasi:</strong> Deteksi dini harus selaras dengan komunikasi cepat dan kesiapan warga (UNDRR 4 Pilar)[span_4](start_span)[span_4](end_span).</li>
+            <li><strong>Komunikasi Risiko Inklusif:</strong> Hindari istilah terlalu teknis dan siapkan saluran cadangan saat listrik lumpuh[span_5](start_span)[span_5](end_span).</li>
+            <li><strong>Atasi Hoaks dengan Cepat:</strong> Informasi resmi terverifikasi dari BPBD/BNPB sangat vital untuk mencegah panik massal[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).</li>
+            <li><strong>Evakuasi Kelompok Rentan:</strong> Rencana kontingensi harus memprioritaskan lansia, anak-anak, dan disabilitas[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span).</li>
+        `;
+    }
+
+    function restartGame() {
+        document.getElementById('eval-page').classList.add('hidden');
+        document.getElementById('education-page').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
